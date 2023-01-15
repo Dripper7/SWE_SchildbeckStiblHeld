@@ -1,0 +1,14 @@
+name: Test
+on:
+  push:
+    branches:
+      - multiple_file_upload
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Test
+      run: docker run --rm -v ${{ runner.workspace }}:/app -w /app {image_name} {test_command}
