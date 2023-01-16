@@ -8,9 +8,10 @@ Path: templates/download-multiple.html
 
 <body>
     <h1>Download Multiple Files</h1>
-    <form action="../templates/download-multiple.html" method="GET" enctype="multipart/form-data">
+    <form action="http://localhost:5000/multiple-files-download" method="GET" enctype="multipart/form-data">
+        <input type="file" name="files[]" multiple>
         <input type="submit" value="Download">
-        <br></br>
+        <br><br />
         <a href="../templates/index.html">Go Back</a>
     </form>
 </body>

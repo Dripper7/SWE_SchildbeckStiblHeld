@@ -1,0 +1,6 @@
+<body>
+    <h1>View Images</h1>
+    {% for image in images %}
+    <code><img src="{{ url_for('static', filename='uploads/' + image, _external=True) }}" alt="{{ image }}"></code>
+    {% endfor %}
+</body>

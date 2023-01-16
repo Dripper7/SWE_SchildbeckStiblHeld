@@ -8,13 +8,11 @@ Path: templates/upload-multiple.html
 
 <body>
    <h1>Upload Multiple Files</h1>
-
-   <form action="../templates/upload-multiple.html" method="POST" enctype="multipart/form-data">
+   <form action="http://localhost:5000/multiple-files-upload" method="POST" enctype="multipart/form-data">
       <input type="file" name="files[]" multiple>
       <input type="submit" value="Upload">
-      <br></br>
+      <br><br />
       <a href="../templates/index.html">Go Back</a>
-
    </form>
 </body>
 
