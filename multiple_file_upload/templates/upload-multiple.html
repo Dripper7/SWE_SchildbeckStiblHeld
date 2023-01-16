@@ -1,9 +1,21 @@
+Path: templates/upload-multiple.html
+<!DOCTYPE html>
 <html>
-   <body>
-      <form action = "/multiple-files-upload" method = "POST" 
-         enctype = "multipart/form-data">
-         <input type = "file" name = "files[]" multiple="multiple"/>
-         <input type = "submit"/>
-      </form>   
-   </body>
+
+<head>
+   <title>Upload Multiple Files</title>
+</head>
+
+<body>
+   <h1>Upload Multiple Files</h1>
+
+   <form action="../templates/upload-multiple.html" method="POST" enctype="multipart/form-data">
+      <input type="file" name="files[]" multiple>
+      <input type="submit" value="Upload">
+      <br></br>
+      <a href="../templates/index.html">Go Back</a>
+
+   </form>
+</body>
+
 </html>
