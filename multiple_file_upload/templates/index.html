@@ -1,43 +1,85 @@
-Path: templates/index.html
 <!DOCTYPE html>
 <html>
 
 <head>
     <title>Upload and Download Multiple Files</title>
     <style>
-        /* Some basic styling to make the page look nice */
+        /* Basic styling */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Open Sans', sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #edf7F6;
         }
 
         h1 {
             text-align: center;
             padding: 20px;
-            background-color: #f2f2f2;
             margin: 0;
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
         }
 
         /* Add some styling for the links */
         a {
             display: block;
             text-decoration: none;
-            color: #4CAF50;
-            padding: 10px 20px;
+            color: #fff;
+            padding: 20px;
             margin: 20px auto;
             text-align: center;
-            background-color: #f2f2f2;
+            background-color: #ffa8B6;
             border-radius: 4px;
-            font-size: 16px;
+            font-size: 18px;
+            transition: background-color 0.2s ease-in-out;
+            width: 200px;
+            margin: 0 auto;
+        }
+
+            a:hover {
+                background-color: #9df9ef;
+            }
+
+        /* Add some styling for the authors */
+        p {
+            text-align: center;
+            font-size: 14px;
+            color: #a28089;
+            margin-top: 30px;
+        }
+
+        /* Add some styling for the description */
+        .description {
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+            margin-top: 30px;
+            line-height: 1.5;
+        }
+
+        /* Add some styling for the container */
+        .container {
+            max-width: 1200px;
+            margin: 25 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <h1>Upload and Download Multiple Files</h1>
-    <a href="../templates/upload-multiple.html">Upload Multiple Files</a>
-    <a href="../templates/download-multiple.html">Download Multiple Files</a>
+    <div class="container description">
+        This website allows you to easily upload and download multiple files at once. With a simple and intuitive user interface, you can quickly and easily manage your files without any hassle.
+    </div>
+    <div class="container">
+        <a href="../templates/upload-multiple.html">Upload Multiple Files</a>
+        <a href="../templates/download-multiple.html">Download Multiple Files</a>
+    </div>
+
     <p>Authors: Stiebl, Schildbeck, Held</p>
 </body>
 
