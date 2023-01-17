@@ -63,32 +63,19 @@ def upload_file():
 def download_file():
 	#get app path
 	app_path = os.path.dirname(os.path.abspath(__file__))
-	#delete_zip_files()
 	#get all files in uploads
 	files = os.listdir(os.path.join(app_path, app.config['UPLOAD_FOLDER']))
 	#download_path
 	download_path = os.path.join(app_path, app.config['UPLOAD_FOLDER'])
 	#get all files in uploads
 	files = os.listdir(download_path)
+	#delete all zip files in download path
+	for file2 in files:
+		if file2.endswith('.zip'):
+			os.remove(os.path.join(download_path, file2))			
 	#zip all files
-	#zip_file = shutil.make_archive(base_name='AllUploadedImages', format='zip', base_dir=app_path, root_dir=os.chdir(download_path))
-	#create zip file at app path with contents from download path
 	zip_file = shutil.make_archive(base_name='AllUploadedImages', format='zip', base_dir=os.chdir(app_path), root_dir=os.chdir(download_path))
-	#move zip file from download path to app path
-	#download zip file and delete zip file on server when download is finished
 	return send_file(os.path.join(app_path, app.config['UPLOAD_FOLDER'], zip_file), as_attachment=True)
-
-
-def delete_zip_files():
-	#get app path
-    app_path = os.path.dirname(os.path.abspath(__file__))
-    #get all files in uploads
-    files = os.listdir(os.path.join(app_path, app.config['UPLOAD_FOLDER']))
-    #delete all zip files in upload folder
-    for file in files:
-        if file.endswith('.zip'):
-            os.remove(os.path.join(app_path, file))
-    return jsonify({'message' : 'Zip files successfully deleted'})
 
 
     
