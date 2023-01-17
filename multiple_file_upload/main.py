@@ -1,9 +1,13 @@
+from fileinput import filename
+from importlib.resources import path
 import os
+import shutil
 import urllib.request
 from app import app
 from flask import Flask, request, redirect, jsonify, render_template
 from werkzeug.utils import secure_filename
 from flask import send_file
+
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -27,14 +31,16 @@ def upload_file():
 	
 	files = request.files.getlist('files[]')
 
-    
 	errors = {}
 	success = False
 	
 	for file in files:		
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
-			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			#get app path
+			app_path = os.path.dirname(os.path.abspath(__file__))
+			#apppath + filename
+			file.save(os.path.join(app_path, app.config['UPLOAD_FOLDER'], filename))
 			success = True
 		else:
 			errors[file.filename] = 'File type is not allowed'
@@ -53,90 +59,39 @@ def upload_file():
 		resp.status_code = 400
 		return resp
 
-##multiple files download 
-#@app.route('/multiple-files-download', methods=['GET'])
-#def download_file():
-#	# check if the post request has the file part
-#    if 'files[]' not in request.files:
-#        resp = jsonify({'message' : 'No file part in the request'})
-#        resp.status_code = 400
-#        return resp
-    
-#    files = request.files.getlist('files[]')
-    
-#    errors = {}
-#    success = False
-    
-#    for file in files:		
-#        if file and allowed_file(file.filename):
-#            filename = secure_filename(file.filename)
-#            file.save(os.path.join(app.config['DOWNLOAD_FOLDER'], filename))
-#            success = True
-#        else:
-#            errors[file.filename] = 'File type is not allowed'
-    
-#    if success and errors:
-#        errors['message'] = 'File(s) successfully downloaded'
-#        resp = jsonify(errors)
-#        resp.status_code = 206
-#        return resp
-#    if success:
-#        resp = jsonify({'message' : 'Files successfully downloaded'})
-#        resp.status_code = 201
-#        return resp
-#    else:
-#        resp = jsonify(errors)
-#        resp.status_code = 400
-#        return resp
-	
 @app.route('/multiple-files-download', methods=['GET'])
 def download_file():
-    #download all files in the uploads folder
-    uploadss = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])
-    return send_file(uploadss, as_attachment=True)
+	#get app path
+	app_path = os.path.dirname(os.path.abspath(__file__))
+	#delete_zip_files()
+	#get all files in uploads
+	files = os.listdir(os.path.join(app_path, app.config['UPLOAD_FOLDER']))
+	#download_path
+	download_path = os.path.join(app_path, app.config['UPLOAD_FOLDER'])
+	#get all files in uploads
+	files = os.listdir(download_path)
+	#zip all files
+	#zip_file = shutil.make_archive(base_name='AllUploadedImages', format='zip', base_dir=app_path, root_dir=os.chdir(download_path))
+	#create zip file at app path with contents from download path
+	zip_file = shutil.make_archive(base_name='AllUploadedImages', format='zip', base_dir=os.chdir(app_path), root_dir=os.chdir(download_path))
+	#move zip file from download path to app path
+	#download zip file and delete zip file on server when download is finished
+	return send_file(os.path.join(app_path, app.config['UPLOAD_FOLDER'], zip_file), as_attachment=True)
 
-    
-    
-    files = request.args.getlist('files[]')
-    if not files:
-        return jsonify({'message': 'No files selected for download'}), 400
-    errors = {}
-    success = False
+
+def delete_zip_files():
+	#get app path
+    app_path = os.path.dirname(os.path.abspath(__file__))
+    #get all files in uploads
+    files = os.listdir(os.path.join(app_path, app.config['UPLOAD_FOLDER']))
+    #delete all zip files in upload folder
     for file in files:
-        if allowed_file(file) and os.path.exists(file):
-            try:
-                return send_file(file, as_attachment=True)
-            except Exception as e:
-                errors[file] = str(e)
-        else:
-            errors[file] = 'File type is not allowed or file does not exist'
-    if success and errors:
-        errors['message'] = 'Some files successfully downloaded'
-        resp = jsonify(errors)
-        resp.status_code = 206
-        return resp
-    if success:
-        resp = jsonify({'message' : 'Files successfully downloaded'})
-        resp.status_code = 201
-        return resp
-    else:
-        resp = jsonify(errors)
-        resp.status_code = 400
-        return resp
-    
-    
-@app.route('/view-images')
-def view_images():
-    print("view_images function called")
-    images = os.listdir(app.config['UPLOAD_FOLDER'])
-    print(images)
-
-    return render_template('view-images.html', images=images)
+        if file.endswith('.zip'):
+            os.remove(os.path.join(app_path, file))
+    return jsonify({'message' : 'Zip files successfully deleted'})
 
 
     
-
-
 if __name__ == "__main__":
     #app.run()
     app.run(host='0.0.0.0', port=5000, debug=True)
