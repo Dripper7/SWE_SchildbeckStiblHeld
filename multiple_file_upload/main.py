@@ -7,7 +7,8 @@ from app import app
 from flask import Flask, request, redirect, jsonify, render_template
 from werkzeug.utils import secure_filename
 from flask import send_file
-
+import subprocess
+from pathlib import Path
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -63,23 +64,33 @@ def upload_file():
 def download_file():
 	#get app path
 	app_path = os.path.dirname(os.path.abspath(__file__))
-	#get all files in uploads
-	files = os.listdir(os.path.join(app_path, app.config['UPLOAD_FOLDER']))
-	#download_path
 	download_path = os.path.join(app_path, app.config['UPLOAD_FOLDER'])
-	#get all files in uploads
-	files = os.listdir(download_path)
-	#delete all zip files in download path
-	for file2 in files:
-		if file2.endswith('.zip'):
-			os.remove(os.path.join(download_path, file2))			
 	#zip all files
 	zip_file = shutil.make_archive(base_name='AllUploadedImages', format='zip', base_dir=os.chdir(app_path), root_dir=os.chdir(download_path))
 	return send_file(os.path.join(app_path, app.config['UPLOAD_FOLDER'], zip_file), as_attachment=True)
 
+#route for build video with ffmpeg
+@app.route('/build', methods=['GET'])
+def build():
+	fps = 25
+	#upload folder full path
+	app_path = os.path.dirname(os.path.abspath(__file__))
+	download_path = os.path.join(app_path, app.config['UPLOAD_FOLDER'])
+	for i in range(1, 2+1):
+		#input directory
+		input_file = os.path.join(str(Path(__file__).parent), '{:02d}.png'.format(i))
+		#output_file = os.chdir(os.path.join(str(Path(__file__).parent),  'output.mp4'))
+		subprocess.call(['ffmpeg', '-framerate', str(fps), '-i', os.chdir(input_file) , '-c:v', 'libx264', '-profile:v', 'high', '-crf', '20', '-pix_fmt', 'yuv420p', 'output.mp4'])
 
-    
+	
+	
+
+
+
 if __name__ == "__main__":
     #app.run()
     app.run(host='0.0.0.0', port=5000, debug=True)
 
+
+
+#subprocess.call(['ffmpeg', '-framerate', str(fps), '-i', 'uploads/%d.jpg', '-c:v', 'libx264', '-r', '30', '-pix_fmt', 'yuv420p', 'output.mp4'])
