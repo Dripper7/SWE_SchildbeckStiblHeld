@@ -10,6 +10,8 @@ COPY requirements.txt /multiple_file_upload
 # install the dependencies
 RUN pip install -r requirements.txt
 
+RUN apt-get update && \
+    apt-get install -y ffmpeg
 # copy content from local directory to the image
 COPY . /multiple_file_upload
 

@@ -68,6 +68,8 @@ def download_file():
 	#zip all files
 	zip_file = shutil.make_archive(base_name='AllUploadedImages', format='zip', base_dir=os.chdir(app_path), root_dir=os.chdir(download_path))
 	return send_file(os.path.join(app_path, app.config['UPLOAD_FOLDER'], zip_file), as_attachment=True)
+#import ImageClip
+
 
 #route for build video with ffmpeg
 @app.route('/build', methods=['GET'])
@@ -76,12 +78,30 @@ def build():
 	#upload folder full path
 	app_path = os.path.dirname(os.path.abspath(__file__))
 	download_path = os.path.join(app_path, app.config['UPLOAD_FOLDER'])
+
+	
 	for i in range(1, 2+1):
 		#input directory
-		input_file = os.path.join(str(Path(__file__).parent), '{:02d}.png'.format(i))
-		#output_file = os.chdir(os.path.join(str(Path(__file__).parent),  'output.mp4'))
-		subprocess.call(['ffmpeg', '-framerate', str(fps), '-i', os.chdir(input_file) , '-c:v', 'libx264', '-profile:v', 'high', '-crf', '20', '-pix_fmt', 'yuv420p', 'output.mp4'])
-
+		input_file = (os.path.join(str(Path(__file__).parent), '{:02d}.png'.format(i)))
+		input_file2 =(os.path.join(str(Path(__file__).parent), ''))
+		
+		#create video from png files in upload folder with ffmpeg and sent to html page
+		#subprocess.call(['ffmpeg', '-framerate', str(fps), '-i', input_file, '-c:v', 'libx264', '-r', '30', '-pix_fmt', 'yuv420p','output.mp4'])
+		my_frame = 3
+		subprocess.call([
+			'ffmpeg',
+			'-r', '10',
+			'-i', '%03d.png' % my_frame,
+			'-r', 'ntsc',
+			'movie%03d.mpg' % my_frame,
+		])
+		#return send_file(os.path.join(app_path, app.config['UPLOAD_FOLDER'], 'output.mp4'), as_attachment=True)
+		return render_template('video.html', user_image = 'output.mp4')
+	
+		
+		#return render_template('video.html', video=video)
+		return send_file(os.path.join(app_path, app.config['UPLOAD_FOLDER'], 'video.mp4'), as_attachment=True)
+	
 	
 	
 
@@ -94,3 +114,4 @@ if __name__ == "__main__":
 
 
 #subprocess.call(['ffmpeg', '-framerate', str(fps), '-i', 'uploads/%d.jpg', '-c:v', 'libx264', '-r', '30', '-pix_fmt', 'yuv420p', 'output.mp4'])
+#		subprocess.call(['ffmpeg', '-framerate', str(fps), '-i', os.chdir(input_file) , '-c:v', 'libx264', '-profile:v', 'high', '-crf', '20', '-pix_fmt', 'yuv420p', 'output.mp4'])
