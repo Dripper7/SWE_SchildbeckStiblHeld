@@ -53,7 +53,7 @@
             font-size: 18px;
             margin-top: 20px;
             transition: background-color 0.2s ease-in-out;
-            width: 200px;
+            width: 350px;
             margin: 0 auto;
         }
 
@@ -84,15 +84,17 @@
 <body>
     <h1>Download Multiple Files</h1>
     <form action="http://localhost:5000/multiple-files-download" method="GET" enctype="multipart/form-data">
-        <input type="submit" value="Download">
+        <input type="submit" value="Download all Images as Zip">
+        <br><br />
+
+    </form>
+    <form action="http://localhost:5000/build" method="get">
+        <input type="submit" value="Build Video & Download Video">
         <br><br />
         <a href="/">Go Back</a>
     </form>
-    <br><br />
 
-    <form action="http://localhost:5000/build" method="get">
-        <input type="submit" value="Build Video">
-    </form>
+
     <div class="footer-container">
         <div class="footer-text">
             Authors: Stiebl, Schildbeck, Held
