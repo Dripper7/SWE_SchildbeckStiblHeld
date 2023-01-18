@@ -2,13 +2,12 @@ from fileinput import filename
 from importlib.resources import path
 import os
 import shutil
-import urllib.request
 from app import app
 from flask import Flask, request, redirect, jsonify, render_template
 from werkzeug.utils import secure_filename
 from flask import send_file
-import subprocess
 from pathlib import Path
+import cv2
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -71,15 +70,11 @@ def upload_file():
 
 @app.route('/multiple-files-download', methods=['GET'])
 def download_file():
-	#get app path
-	app_path = os.path.dirname(os.path.abspath(__file__))
-	download_path = os.path.join(app_path, app.config['UPLOAD_FOLDER'])
 	#zip all files
-	zip_file = shutil.make_archive(base_name='AllUploadedImages', format='zip', base_dir=os.chdir(app_path), root_dir=os.chdir(download_path))
-	return send_file(os.path.join(app_path, app.config['UPLOAD_FOLDER'], zip_file), as_attachment=True)
+	zip_file = shutil.make_archive(base_name='AllUploadedImages', format='zip', base_dir=(app.config['UPLOAD_FOLDER']))
+	return send_file(os.path.join(app.config['UPLOAD_FOLDER'], zip_file), as_attachment=True)
 #import ImageClip
 
-import cv2
 
 #route for build video with ffmpeg
 @app.route('/build', methods=['GET'])
