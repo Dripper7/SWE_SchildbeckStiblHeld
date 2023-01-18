@@ -15,11 +15,20 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 #check File type 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+#route for index
+@app.route('/')
+def index():
+	return render_template('index.html')
 
-#upload image
-@app.route('/')  # GET, for browser, gui will be provided to user
-def upload_image():
-    return render_template('upload-multiple.html')
+#route for templates/download-multiple.html
+@app.route('/templates/download-multiple.html')
+def download_multiple():
+	return render_template('download-multiple.html')
+
+#route for templates/upload-multiple.html
+@app.route('/templates/upload-multiple.html')
+def upload_multiple():
+	return render_template('upload-multiple.html')
 
 #multiple files upload 
 @app.route('/multiple-files-upload', methods=['POST'])
