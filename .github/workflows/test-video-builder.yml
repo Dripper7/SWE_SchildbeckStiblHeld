@@ -1,0 +1,44 @@
+name: test-video-builder
+run-name: ${{ github.actor }} is testing video_builder
+
+on:
+  push:
+    branches:
+      - video-builder
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install ffmpeg
+      - name: Test if ffmpeg installed
+        run: |
+          ffmpeg -version
+          python3 --version
+          pwd
+          ls
+          ls video_builder/
+          ls video_builder/uploads/
+          ls video_builder/downloads/
+          find -name video_builder.py
+      - name: Run video builder
+        run: |
+          cd video_builder/
+          ls
+          python3 video_builder.py
+      - name: Show newly created video
+        run: |
+          ls video_builder/downloads/
