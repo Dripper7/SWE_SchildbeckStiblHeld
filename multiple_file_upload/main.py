@@ -70,18 +70,78 @@ def upload_file():
 
 @app.route('/multiple-files-download', methods=['GET'])
 def download_file():
-	#zip all files
-	zip_file = shutil.make_archive(base_name='AllUploadedImages', format='zip', base_dir=(app.config['UPLOAD_FOLDER']))
-	return send_file(os.path.join(app.config['UPLOAD_FOLDER'], zip_file), as_attachment=True)
-#import ImageClip
+	#zip all files and save the zipped file into zips directory
+	shutil.make_archive('zips/AllImages', 'zip', 'uploads')
+	return send_file(os.path.join('zips\\', 'AllImages.zip'), as_attachment=True)
 
 
-#route for build video with ffmpeg
-@app.route('/build', methods=['GET'])
-def build():
+#build route that takes a name as input in a api call
+@app.route('/build', methods=['POST'])
+def GetName():
+	#check if the post request has the file part
+    if 'name' not in request.form:
+        resp = jsonify({'message' : 'No name part in the request'})
+        resp.status_code = 400
+        return resp
+    #call build function with name
+    return build(request.form['name'])
+
+#play route to playVideo by name
+@app.route('/play', methods=['POST'])
+def PlayVideo():
+	#check if the post request has the file part
+    if 'name' not in request.form:
+        resp = jsonify({'message' : 'No name part in the request'})
+        resp.status_code = 400
+        return resp
+    #call build function with name
+    return play(request.form['name'])
+	
+def play(videoName):
+	#load video
+    cap = cv2.VideoCapture('videos/' + videoName + '.avi')
+    
+    while(cap.isOpened()):
+        ret, frame = cap.read()
+        if ret==True:
+            # Display the resulting frame
+            cv2.imshow('frame',frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        else:
+            break
+    
+    # When everything done, release the capture
+    cap.release()
+    cv2.destroyAllWindows()
+    
+    return 'Video played'
+
+#html code for play video by name
+#<form action="/play" method="post">
+#    <input type="text" name="name" placeholder="Video Name">
+#    <input type="submit" value="Play">
+#</form>
+
+
+	
+#htmlcode
+#  <!---define videoName from input field-->
+#  <input type="text" id="videoName" name="videoName" placeholder="Video Name">
+#  <!---call build function with videoName-->
+
+# <video width="320" height="240" controls>                
+#    <source src="{{ url_for('static', filename='videos/' + videoName + '.avi') }}" type="video/avi">
+# </video>
+	
+
+
+
+
+def build(videoName):
 	# Define the codec and create VideoWriter object avi output with 4 fps and 4 sek length
 	fourcc = cv2.VideoWriter_fourcc(*'XVID')
-	out = cv2.VideoWriter('output.avi',fourcc, 1.0, (28,28))
+	out = cv2.VideoWriter('videos/' + videoName + '.avi',fourcc, 1.0, (28,28))
 	
 	# Load images
 	image_folder = 'uploads'
@@ -91,11 +151,15 @@ def build():
 		frame = cv2.imread(os.path.join(image_folder, image))
 		print(image)
 		out.write(frame)
-
+	
+	#save video in uploads folder
+	
+	
 	# Release everything if job is finished
 	out.release()
+	
 	#send file
-	return send_file('output.avi', as_attachment=True)
+	return send_file('videos/' + videoName + '.avi', as_attachment=True)
 	
 
 

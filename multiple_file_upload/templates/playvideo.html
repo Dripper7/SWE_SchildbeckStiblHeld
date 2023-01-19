@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Download Multiple Files</title>
+    <title>Play Video</title>
     <style>
         /* Basic styling */
         body {
@@ -83,18 +83,18 @@
 </head>
 
 <body>
-    <h1>Download Multiple Files</h1>
-    <form action="http://localhost:5000/multiple-files-download" method="GET" enctype="multipart/form-data">
-        <input type="submit" value="Download all Images as Zip">
-        <br><br />
+    <h1>Play Video by Name</h1>
+    <form action="http://localhost:5000/play" method="post">
+        <input type="text" name="name" placeholder="Enter video name here" style="margin:25px; padding:15px">
+        <input type="submit" value="Play Video">
+        <a href="/">Go Back</a>
+
     </form>
 
-    <form action="/build" method="post">
-        <!--add text input UI-->
-        <input type="text" name="name" placeholder="Enter video name here" style="margin:25px; padding:15px">
-        <input type="submit" value="Download Video">
+    <form action="http://localhost:5000/play" method="post">
+        <input type="text" name="name" placeholder="Video Name">
+        <input type="submit" value="Play">
     </form>
-    <a href="/">Go Back</a>
 
     <div class="footer-container">
         <div class="footer-text">
