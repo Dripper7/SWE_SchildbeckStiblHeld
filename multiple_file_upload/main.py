@@ -29,6 +29,11 @@ def download_multiple():
 def upload_multiple():
 	return render_template('upload-multiple.html')
 
+#route for templates/upload-multiple.html
+@app.route('/templates/playvideo.html')
+def play_video():
+	return render_template('playvideo.html')
+
 #multiple files upload 
 @app.route('/multiple-files-upload', methods=['POST'])
 def upload_file():
@@ -100,7 +105,6 @@ def PlayVideo():
 def play(videoName):
 	#load video
     cap = cv2.VideoCapture('videos/' + videoName + '.avi')
-    
     while(cap.isOpened()):
         ret, frame = cap.read()
         if ret==True:
@@ -114,29 +118,8 @@ def play(videoName):
     # When everything done, release the capture
     cap.release()
     cv2.destroyAllWindows()
-    
+
     return 'Video played'
-
-#html code for play video by name
-#<form action="/play" method="post">
-#    <input type="text" name="name" placeholder="Video Name">
-#    <input type="submit" value="Play">
-#</form>
-
-
-	
-#htmlcode
-#  <!---define videoName from input field-->
-#  <input type="text" id="videoName" name="videoName" placeholder="Video Name">
-#  <!---call build function with videoName-->
-
-# <video width="320" height="240" controls>                
-#    <source src="{{ url_for('static', filename='videos/' + videoName + '.avi') }}" type="video/avi">
-# </video>
-	
-
-
-
 
 def build(videoName):
 	# Define the codec and create VideoWriter object avi output with 4 fps and 4 sek length
